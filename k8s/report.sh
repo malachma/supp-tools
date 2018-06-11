@@ -28,18 +28,21 @@ spec:
     hostPath:
       path: /
 END
+#Sleep for 5 seconds to get the POD deployed
 sleep 5
-kubectl get pods
 
 #Run the sosreport tool
 #Since we use chroot, sosreport installation is not needed. It is is already installed by default on every agent-vm
 TDIR=$(mktemp -d /tmp/aks.XXXXXXXXX)
 cd $TDIR
 
-kubectl exec -t node-report -- chroot /agent-root sosreport -a --batch | tee | grep -A 1 "Your sosreport has been generated and saved in:"  > batch.out
+echo "Creating the sosreport"
+echo "Please be patient ..."
+kubectl exec -t node-report -- chroot /agent-root sosreport -a --batch | grep -A 1 "Your sosreport has been generated and saved in:"  > batch.out
 kubectl cp node-report:/agent-root$(sed -e '1d; s/\s*//' batch.out) .
 
 #Collect the container logs
+echo "Collecting the container-logs"
 kubectl exec -t node-report -- chroot /agent-root tar chf /tmp/container_logs.tar /var/log/containers
 kubectl cp node-report:/agent-root/tmp/container_logs.tar .
 
