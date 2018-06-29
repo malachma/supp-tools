@@ -125,7 +125,7 @@ The collection is stored in the tar bundle aks-support-collection_<SR-Number>.ta
 EOF
 echo
 echo
-#We need an SR number create the tar bundle name correct
+#We need an SR number to create the tar bundle name correct
 read -p "What is the SR number this collection is associated with? " SRNUMBER
 
 TDIR=$(mktemp -d /tmp/aks.XXXXXXXXX)
