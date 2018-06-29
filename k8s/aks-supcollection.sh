@@ -132,8 +132,8 @@ TDIR=$(mktemp -d /tmp/aks.XXXXXXXXX)
 cd $TDIR
 
 #Create the collection dir which is used to store any file created, which becomes hand if the tar archive is expanded later
-mkdir collection
-cd collection
+mkdir collection_$SRNUMBER
+cd collection_$SRNUMBER
 
 #Get our commands executed and generate both json and wide output
 for CMD in "${!commands[@]}"; do
