@@ -1,5 +1,8 @@
 #/bin/bash
 
+#We need an SR number to create the tar bundle name correct
+read -p "What is the SR number this report is associated with? " SRNUMBER
+
 #Delete the POD node-report. Be sure we have a clean environment
 kubectl delete pod -l app=node-report
 
