@@ -21,3 +21,7 @@ and gets the kubelet log. All of the information are saved in a tar-ball which i
 - Systemd needs to be installed 
 - In order to run both tools a working kubectl setup is needed to get in touch with the cluster of choice.
 - The tools work only in a Linux/Unix environment. On Windows [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) can be used instead 
+
+## Related projects
+[K8sSmokeTest](https://github.com/dsalamancaMS/K8sSmokeTest)
+
