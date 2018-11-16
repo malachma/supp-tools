@@ -10,7 +10,7 @@ kubectl delete pod -l app=node-report
 TDIR=$(mktemp -d /tmp/aks.XXXXXXXXX)
 cd $TDIR
 
-#create the POD node-report
+#create the POD node-reports
 #It has root access to the agent-vm
 for agentname in $(kubectl get nodes -o jsonpath={.items[*].metadata.name}); do 
 cat <<END | kubectl create -f - ;
@@ -42,15 +42,24 @@ spec:
     hostPath:
       path: /
 END
+#End the for loop
+done
 
 #Sleep for 5 seconds to get the POD deployed
 sleep 5
 
+#Start a new loop to collect the information from each node
+
+for agentname in $(kubectl get nodes -o jsonpath={.items[*].metadata.name}); do 
+
+echo "##################################################"
+echo "Collecting information for node $agentname"
+echo "##################################################"
+
 #Run the sosreport tool
 #Since we use chroot, sosreport installation is not needed. It is is already installed by default on every agent-vm
-
 echo "Creating the sosreport"
-echo "Please be patient ..."
+echo "Please be patient some of the modules take its time to collect the right information ..."
 kubectl exec -t node-report-$agentname -- chroot /agent-root sosreport -a --batch | grep -A 1 "Your sosreport has been generated and saved in:"  > batch-$agentname.out
 kubectl cp node-report-$agentname:/agent-root$(sed -e '1d; s/\s*//' batch-$agentname.out) .
 
@@ -60,16 +69,20 @@ kubectl exec -t node-report-$agentname -- chroot /agent-root tar chf /tmp/contai
 kubectl cp node-report-$agentname:/agent-root/tmp/container_logs.tar container-$agentname-logs.tar
 
 #Get the kublet log. As it is not a POD/Container anymore with 1.9.6 it can only be fetched via journalctl
+echo "Get the kubelet log"
+echo "Depending of the size of the log it takes up to several minutes to save it"
 kubectl exec -t node-report-$agentname -- chroot /agent-root journalctl -u kubelet --no-pager > kubelet-$agentname.log
 
 #Remove the batch.out file
 rm batch-$agentname.out
-#End the for loop
+
+#End the this loop
 done
 
-#Create a tar file and add the sosreport and the container_logs to it 
-tar cf /tmp/aks-report.tar *
-echo "The created aks-report is located in /tmp. the name of the archive is aks-report.tar"
+#Create a tar file and add the sosreport and the container_logs to it
+echo "All items are collected. Next step is creating the aks-report tar-ball."
+tar cf /tmp/aks-report-SR$SRNUMBER.tar *
+echo "The created aks-report is located in /tmp. the name of the archive is aks-report-SR$SRNUMBER.tar"
 echo "Please pass over the tar archive to the support engineer"
 #Delete the tmp-dir
 cd /tmp
