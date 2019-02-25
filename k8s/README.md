@@ -14,7 +14,7 @@ All of the information collected are saved in a tar-bal in the folder /tmp as ak
  
 ## report.sh
 This tool creates an sosreport on each of the agent-nodes. It collects also the folder /var/log/containers
-and gets the kubelet log. All of the information are saved in a tar-ball which is saved in the folder /tmp as aks-report.tar, locally on your 
+and gets the kubelet log. All of the information are saved in a tar-ball which is saved in the folder /tmp as aks-report.tar, locally on your PC/Server where the script is executed.
  
 ## Requirements
 - The report.sh tool expects sosreport installed on each of the nodes (which should be the default on the major distros)
