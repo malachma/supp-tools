@@ -7,6 +7,8 @@ no special dependencies are used.
 There are two tools: 
  - aks-supcollection.sh
  - report.sh
+ 
+ The script extendPrincipal.sh is outdated please consult this docu instead: https://docs.microsoft.com/en-us/azure/aks/update-credentials
 
 ## aks-suppcollection.sh
 This tool collects all kind of Kubernetes related information (POD, Service, Endpoint, etc.)
